@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0-master-9891723
+ * v0.11.0
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -20,8 +20,7 @@ angular.module('material.components.input', [
   .directive('input', inputTextareaDirective)
   .directive('textarea', inputTextareaDirective)
   .directive('mdMaxlength', mdMaxlengthDirective)
-  .directive('placeholder', placeholderDirective)
-  .directive('ngMessages', ngMessagesDirective);
+  .directive('placeholder', placeholderDirective);
 
 /**
  * @ngdoc directive
@@ -36,10 +35,8 @@ angular.module('material.components.input', [
  * Input and textarea elements will not behave properly unless the md-input-container
  * parent is provided.
  *
- * @param md-is-error {expression=} When the given expression evaluates to true, the input container
- *   will go into error state. Defaults to erroring if the input has been touched and is invalid.
- * @param md-no-float {boolean=} When present, placeholders will not be converted to floating
- *   labels.
+ * @param md-is-error {expression=} When the given expression evaluates to true, the input container will go into error state. Defaults to erroring if the input has been touched and is invalid.
+ * @param md-no-float {boolean=} When present, placeholders will not be converted to floating labels
  *
  * @usage
  * <hljs lang="html">
@@ -67,7 +64,6 @@ function mdInputContainerDirective($mdTheming, $parse) {
   function postLink(scope, element, attr) {
     $mdTheming(element);
   }
-
   function ContainerCtrl($scope, $element, $attrs) {
     var self = this;
 
@@ -82,12 +78,6 @@ function mdInputContainerDirective($mdTheming, $parse) {
     };
     self.setHasValue = function(hasValue) {
       $element.toggleClass('md-input-has-value', !!hasValue);
-    };
-    self.setHasMessages = function(hasMessages) {
-      $element.toggleClass('md-input-has-messages', !!hasMessages);
-    };
-    self.setHasPlaceholder = function(hasPlaceholder) {
-      $element.toggleClass('md-input-has-placeholder', !!hasPlaceholder);
     };
     self.setInvalid = function(isInvalid) {
       $element.toggleClass('md-input-invalid', !!isInvalid);
@@ -127,15 +117,10 @@ function labelDirective() {
  * @description
  * Use the `<input>` or the  `<textarea>` as a child of an `<md-input-container>`.
  *
- * @param {number=} md-maxlength The maximum number of characters allowed in this input. If this is
- *   specified, a character counter will be shown underneath the input.<br/><br/>
- *   The purpose of **`md-maxlength`** is exactly to show the max length counter text. If you don't
- *   want the counter text and only need "plain" validation, you can use the "simple" `ng-maxlength`
- *   or maxlength attributes.
- * @param {string=} aria-label Aria-label is required when no label is present.  A warning message
- *   will be logged in the console if not present.
- * @param {string=} placeholder An alternative approach to using aria-label when the label is not
- *   PRESENT. The placeholder text is copied to the aria-label attribute.
+ * @param {number=} md-maxlength The maximum number of characters allowed in this input. If this is specified, a character counter will be shown underneath the input.<br/><br/>
+ * The purpose of **`md-maxlength`** is exactly to show the max length counter text. If you don't want the counter text and only need "plain" validation, you can use the "simple" `ng-maxlength` or maxlength attributes.
+ * @param {string=} aria-label Aria-label is required when no label is present.  A warning message will be logged in the console if not present.
+ * @param {string=} placeholder An alternative approach to using aria-label when the label is not present.  The placeholder text is copied to the aria-label attribute.
  * @param md-no-autogrow {boolean=} When present, textareas will not grow automatically.
  *
  * @usage
@@ -194,13 +179,13 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
     var ngModelCtrl = ctrls[1] || $mdUtil.fakeNgModel();
     var isReadonly = angular.isDefined(attr.readonly);
 
-    if (!containerCtrl) return;
+    if ( !containerCtrl ) return;
     if (containerCtrl.input) {
       throw new Error("<md-input-container> can only have *one* <input>, <textarea> or <md-select> child element!");
     }
     containerCtrl.input = element;
 
-    if (!containerCtrl.label) {
+    if(!containerCtrl.label) {
       $mdAria.expect(element, 'aria-label', element.attr('placeholder'));
     }
 
@@ -221,8 +206,8 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
     }
 
     var isErrorGetter = containerCtrl.isErrorGetter || function() {
-        return ngModelCtrl.$invalid && ngModelCtrl.$touched;
-      };
+      return ngModelCtrl.$invalid && ngModelCtrl.$touched;
+    };
     scope.$watch(isErrorGetter, containerCtrl.setInvalid);
 
     ngModelCtrl.$parsers.push(ngModelPipelineCheckValue);
@@ -258,15 +243,14 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       containerCtrl.setHasValue(!ngModelCtrl.$isEmpty(arg));
       return arg;
     }
-
     function inputCheckValue() {
       // An input's value counts if its length > 0,
       // or if the input's validity state says it has bad input (eg string in a number input)
-      containerCtrl.setHasValue(element.val().length > 0 || (element[0].validity || {}).badInput);
+      containerCtrl.setHasValue(element.val().length > 0 || (element[0].validity||{}).badInput);
     }
 
     function setupTextarea() {
-      if (angular.isDefined(element.attr('md-no-autogrow'))) {
+      if(angular.isDefined(element.attr('md-no-autogrow'))) {
         return;
       }
 
@@ -277,7 +261,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       var lineHeight = null;
       // can't check if height was or not explicity set,
       // so rows attribute will take precedence if present
-      if (node.hasAttribute('rows')) {
+      if(node.hasAttribute('rows')) {
         min_rows = parseInt(node.getAttribute('rows'));
       }
 
@@ -296,7 +280,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
       }
       element.on('keydown input', onChangeTextarea);
 
-      if (isNaN(min_rows)) {
+      if(isNaN(min_rows)) {
         element.attr('rows', '1');
 
         element.on('scroll', onScroll);
@@ -315,7 +299,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         // temporarily disables element's flex so its height 'runs free'
         element.addClass('md-no-flex');
 
-        if (isNaN(min_rows)) {
+        if(isNaN(min_rows)) {
           node.style.height = "auto";
           node.scrollTop = 0;
           var height = getHeight();
@@ -323,7 +307,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         } else {
           node.setAttribute("rows", 1);
 
-          if (!lineHeight) {
+          if(!lineHeight) {
             node.style.minHeight = '0';
 
             lineHeight = element.prop('clientHeight');
@@ -340,7 +324,7 @@ function inputTextareaDirective($mdUtil, $window, $mdAria) {
         container.style.height = 'auto';
       }
 
-      function getHeight() {
+      function getHeight () {
         var line = node.scrollHeight - node.offsetHeight;
         return node.offsetHeight + (line > 0 ? line : 0);
       }
@@ -369,12 +353,11 @@ function mdMaxlengthDirective($animate) {
     var ngModelCtrl = ctrls[0];
     var containerCtrl = ctrls[1];
     var charCountEl = angular.element('<div class="md-char-counter">');
-    var input = angular.element(containerCtrl.element[0].querySelector('[md-maxlength]'));
 
     // Stop model from trimming. This makes it so whitespace
     // over the maxlength still counts as invalid.
     attr.$set('ngTrim', 'false');
-    input.after(charCountEl);
+    containerCtrl.element.append(charCountEl);
 
     ngModelCtrl.$formatters.push(renderCharCount);
     ngModelCtrl.$viewChangeListeners.push(renderCharCount);
@@ -386,7 +369,8 @@ function mdMaxlengthDirective($animate) {
       maxlength = value;
       if (angular.isNumber(value) && value > 0) {
         if (!charCountEl.parent().length) {
-          $animate.enter(charCountEl, containerCtrl.element, input);
+          $animate.enter(charCountEl, containerCtrl.element,
+                         angular.element(containerCtrl.element[0].lastElementChild));
         }
         renderCharCount();
       } else {
@@ -402,7 +386,7 @@ function mdMaxlengthDirective($animate) {
     };
 
     function renderCharCount(value) {
-      charCountEl.text(( element.val() || value || '' ).length + '/' + maxlength);
+      charCountEl.text( ( element.val() || value || '' ).length + '/' + maxlength );
       return value;
     }
   }
@@ -418,55 +402,25 @@ function placeholderDirective($log) {
   };
 
   function postLink(scope, element, attr, inputContainer) {
-    // If there is no input container, just return
     if (!inputContainer) return;
+    if (angular.isDefined(inputContainer.element.attr('md-no-float'))) return;
 
-    // Add a placeholder class so we can target it in the CSS
-    inputContainer.setHasPlaceholder(true);
-
-    var label = inputContainer.element.find('label');
-    var hasNoFloat = angular.isDefined(inputContainer.element.attr('md-no-float'));
-
-    // If we have a label, or they specify the md-no-float attribute, just return
-    if ((label && label.length) || hasNoFloat) return;
-
-    // Otherwise, grab/remove the placeholder
     var placeholderText = attr.placeholder;
     element.removeAttr('placeholder');
 
-    // And add the placeholder text as a separate label
-    if (inputContainer.input && inputContainer.input[0].nodeName != 'MD-SELECT') {
-      var placeholder = '<label ng-click="delegateClick()">' + placeholderText + '</label>';
+    if ( inputContainer.element.find('label').length == 0 ) {
+      if (inputContainer.input && inputContainer.input[0].nodeName != 'MD-SELECT') {
+        var placeholder = '<label ng-click="delegateClick()">' + placeholderText + '</label>';
 
-      inputContainer.element.addClass('md-icon-float');
-      inputContainer.element.prepend(placeholder);
+        inputContainer.element.addClass('md-icon-float');
+        inputContainer.element.prepend(placeholder);
+      }
+    } else if (element[0].nodeName != 'MD-SELECT') {
+      $log.warn("The placeholder='" + placeholderText + "' will be ignored since this md-input-container has a child label element.");
     }
+
   }
 }
 placeholderDirective.$inject = ["$log"];
-
-function ngMessagesDirective() {
-  return {
-    restrict: 'EA',
-    link: postLink,
-
-    // This is optional because we don't want target *all* ngMessage instances, just those inside of
-    // mdInputContainer.
-    require: '^^?mdInputContainer'
-  };
-
-  function postLink(scope, element, attr, inputContainer) {
-    // If we are not a child of an input container, don't do anything
-    if (!inputContainer) return;
-
-    // Tell our parent input container we have messages so we can set the proper classes
-    inputContainer.setHasMessages(true);
-
-    // When destroyed, inform our input container
-    scope.$on('$destroy', function() {
-      inputContainer.setHasMessages(false);
-    });
-  }
-}
 
 })(window, window.angular);

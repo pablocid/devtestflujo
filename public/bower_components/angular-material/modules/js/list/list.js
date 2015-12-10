@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0-master-9891723
+ * v0.11.0
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -74,7 +74,7 @@ mdListDirective.$inject = ["$mdTheming"];
  * </hljs>
  *
  */
-function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
+function mdListItemDirective($mdAria, $mdConstant, $timeout) {
   var proxiedTypes = ['md-checkbox', 'md-switch'];
   return {
     restrict: 'E',
@@ -237,8 +237,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
         if (proxies.length && firstChild) {
           $element.children().eq(0).on('click', function(e) {
-            var parentButton = $mdUtil.getClosest(e.target, 'BUTTON');
-            if (!parentButton && firstChild.contains(e.target)) {
+            if (firstChild.contains(e.target)) {
               angular.forEach(proxies, function(proxy) {
                 if (e.target !== proxy && !proxy.contains(e.target)) {
                   angular.element(proxy).triggerHandler('click');
@@ -251,7 +250,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
     }
   };
 }
-mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$mdUtil", "$timeout"];
+mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$timeout"];
 
 /*
  * @private

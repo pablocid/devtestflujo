@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0-master-9891723
+ * v0.11.0
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -68,9 +68,6 @@
         angular.forEach(eventTypes, function(eventType) {
           $element.off(eventType, parseEvents);
         });
-        // remove any attached keyboard handlers in case element is removed while
-        // speed dial is open
-        disableKeyboard();
       });
     }
 
@@ -337,7 +334,6 @@
   }
   FabController.$inject = ["$scope", "$element", "$animate", "$mdUtil", "$mdConstant"];
 })();
-
 (function() {
   'use strict';
 

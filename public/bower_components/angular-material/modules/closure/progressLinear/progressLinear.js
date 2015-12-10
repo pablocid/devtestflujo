@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.0-master-9891723
+ * v0.11.0
  */
 goog.provide('ng.material.components.progressLinear');
 goog.require('ng.material.core');
@@ -89,13 +89,10 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
   }
   function postLink(scope, element, attr) {
     $mdTheming(element);
-
     var lastMode, toVendorCSS = $mdUtil.dom.animator.toCss;
     var bar1 = angular.element(element[0].querySelector('.md-bar1')),
         bar2 = angular.element(element[0].querySelector('.md-bar2')),
         container = angular.element(element[0].querySelector('.md-container'));
-
-    element.attr('md-mode', mode());
 
     validateMode();
     watchAttributes();
@@ -121,7 +118,8 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
           case MODE_BUFFER:
           case MODE_DETERMINATE:
           case MODE_INDETERMINATE:
-            container.removeClass( 'ng-hide' + ' ' + lastMode );
+            container.removeClass('ng-hide');
+            container.removeClass( lastMode );
             container.addClass( lastMode = "md-mode-" + mode );
             break;
           default:
@@ -153,7 +151,7 @@ function MdProgressLinearDirective($mdTheming, $mdUtil, $log) {
      * Is the md-mode a valid option?
      */
     function mode() {
-      var value = (attr.mdMode || "").trim();
+      var value = attr.mdMode;
       if ( value ) {
         switch(value) {
           case MODE_DETERMINATE:
