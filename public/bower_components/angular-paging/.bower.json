@@ -29,6 +29,5 @@
   },
   "_source": "git://github.com/brantwills/Angular-Paging.git",
   "_target": "~2.0.0",
-  "_originalSource": "angular-paging",
-  "_direct": true
+  "_originalSource": "angular-paging"
 }
